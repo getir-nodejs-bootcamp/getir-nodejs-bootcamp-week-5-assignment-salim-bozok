@@ -20,7 +20,7 @@ const sendResetPasswordEmail = async (email, name, token) => {
             You recently requested to reset your password for your account.
             Please click the button below to reset it.
         </p>
-        <a href="${process.env.FRONTEND_URL}/reset-password?token=${token.token}">
+        <a href="${process.env.FRONTEND_URL}/reset-password.html?token=${token.token}">
             Reset password
         </a>
         `,
