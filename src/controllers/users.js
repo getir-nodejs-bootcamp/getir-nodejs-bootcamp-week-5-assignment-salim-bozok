@@ -1,4 +1,9 @@
 const { comparePassword, generateAuthToken } = require("../scripts/auth");
+const {
+  createToken,
+  getToken,
+  deleteAllTokens,
+} = require("../services/tokens");
 const { createUser, getUserByEmail, getUser } = require("../services/users");
 require("../services/tokens");
 
@@ -52,11 +57,93 @@ const getUserController = async (req, res) => {
   }
 };
 
-const updateUserController = async (req, res) => {};
+const updateUserController = async (req, res) => {
+  try {
+    const user = await getUser(req.payload._id);
 
-const passwordResetTokenController = async (req, res) => {};
+    if (!user) {
+      return res.status(404).send({ error: "user not found" });
+    }
 
-const resetPasswordController = async (req, res) => {};
+    if (req.data.password) {
+      user.password = req.data.password;
+    }
+
+    if (req.data.email) {
+      user.email = req.data.email;
+    }
+
+    if (req.data.name) {
+      user.name = req.data.name;
+    }
+
+    await user.save();
+
+    const { password, ...userData } = user._doc;
+
+    res.send({ user: userData });
+  } catch (error) {
+    console.log("an error occured while updating user", error);
+    return res.status(500).json({ error: "something went wrong on our end" });
+  }
+};
+
+const passwordResetTokenController = async (req, res) => {
+  try {
+    const user = await getUserByEmail(req.data.email);
+
+    if (!user) {
+      return res.status(404).send({ error: "user not found" });
+    }
+
+    const threeHours = 60 * 60 * 3 * 1000;
+
+    const token = await createToken({
+      userID: user._id,
+      scope: "password_reset",
+      ttl: threeHours,
+    });
+    res.send({ token });
+  } catch (error) {
+    console.log("an error occured while logging in user", error);
+    return res.status(500).json({ error: "something went wrong on our end" });
+  }
+};
+
+const resetPasswordController = async (req, res) => {
+  try {
+    const token = await getToken(req.data.token);
+
+    if (!token) {
+      return res.status(404).send({ error: "token not found" });
+    }
+
+    if (token.scope !== "password_reset") {
+      return res.status(400).send({ error: "invalid token" });
+    }
+
+    if (token.expiresAt < Date.now()) {
+      return res.status(400).send({ error: "token expired" });
+    }
+
+    const user = await getUser(token.user);
+
+    if (!user) {
+      return res.status(404).send({ error: "user not found" });
+    }
+
+    user.password = req.data.password;
+
+    await user.save();
+
+    await deleteAllTokens(user._id, "password_reset");
+
+    res.send({ message: "password updated successfully" });
+  } catch (error) {
+    console.log("an error occured while resetting password", error);
+    return res.status(500).json({ error: "something went wrong on our end" });
+  }
+};
 
 module.exports = {
   createUserController,

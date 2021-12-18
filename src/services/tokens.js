@@ -12,10 +12,12 @@ function generateToken(userID, scope, ttl) {
   // create token
   const token = crypto.Hmac("sha256", bytes).digest("base64");
 
+  var expiresAt = new Date(Date.now() + ttl);
+
   return new Token({
-    userID,
+    user: userID,
     scope,
-    expiresAt: new Date(Date.now() + ttl),
+    expiresAt,
     token,
   });
 }
