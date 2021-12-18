@@ -1,13 +1,13 @@
 const { comparePassword, generateAuthToken } = require("../scripts/auth");
-const { createUser, getUserByEmail } = require("../services/users");
+const { createUser, getUserByEmail, getUser } = require("../services/users");
 
 const createUserController = async (req, res) => {
   try {
     const user = await createUser(req.data);
 
-    delete user.password;
+    const { password, ...userData } = user._doc;
 
-    res.status(201).send({ user });
+    res.status(201).send({ user: userData });
   } catch (error) {
     if (error.code === 11000) {
       return res
@@ -40,7 +40,16 @@ const loginUserController = async (req, res) => {
   }
 };
 
-const getUserController = async (req, res) => {};
+const getUserController = async (req, res) => {
+  try {
+    const user = await getUser(req.payload._id);
+
+    res.status(200).send({ user });
+  } catch (error) {
+    console.log("an error occured while getting authenticated user", error);
+    return res.status(500).json({ error: "something went wrong on our end" });
+  }
+};
 
 const updateUserController = async (req, res) => {};
 

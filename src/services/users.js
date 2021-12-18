@@ -13,7 +13,7 @@ async function getUser(id) {
 }
 
 async function getUserByEmail(email) {
-  return await User.findOne({ email });
+  return await User.findOne({ email }).select("+password");
 }
 
 async function getUsers() {
