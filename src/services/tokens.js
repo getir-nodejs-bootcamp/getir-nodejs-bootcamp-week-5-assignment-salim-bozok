@@ -15,7 +15,7 @@ function generateToken(userID, scope, ttl) {
   return new Token({
     userID,
     scope,
-    ttl,
+    expiresAt: new Date(Date.now() + ttl),
     token,
   });
 }
