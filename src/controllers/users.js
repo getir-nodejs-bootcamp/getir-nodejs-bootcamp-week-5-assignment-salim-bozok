@@ -1,4 +1,5 @@
 const { comparePassword, generateAuthToken } = require("../scripts/auth");
+const { sendResetPasswordEmail } = require("../scripts/mail");
 const {
   createToken,
   getToken,
@@ -65,17 +66,9 @@ const updateUserController = async (req, res) => {
       return res.status(404).send({ error: "user not found" });
     }
 
-    if (req.data.password) {
-      user.password = req.data.password;
-    }
+    const updates = Object.keys(req.body);
 
-    if (req.data.email) {
-      user.email = req.data.email;
-    }
-
-    if (req.data.name) {
-      user.name = req.data.name;
-    }
+    updates.forEach((update) => (user[update] = req.body[update]));
 
     await user.save();
 
@@ -103,7 +96,11 @@ const passwordResetTokenController = async (req, res) => {
       scope: "password_reset",
       ttl: threeHours,
     });
-    res.send({ token });
+
+    sendResetPasswordEmail(user.email, user.name, token);
+
+    // Send response with no content
+    res.status(204).send();
   } catch (error) {
     console.log("an error occured while logging in user", error);
     return res.status(500).json({ error: "something went wrong on our end" });
