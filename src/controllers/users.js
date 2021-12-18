@@ -1,5 +1,6 @@
 const { comparePassword, generateAuthToken } = require("../scripts/auth");
 const { createUser, getUserByEmail, getUser } = require("../services/users");
+require("../services/tokens");
 
 const createUserController = async (req, res) => {
   try {
@@ -53,9 +54,15 @@ const getUserController = async (req, res) => {
 
 const updateUserController = async (req, res) => {};
 
+const passwordResetTokenController = async (req, res) => {};
+
+const resetPasswordController = async (req, res) => {};
+
 module.exports = {
   createUserController,
   loginUserController,
   getUserController,
   updateUserController,
+  passwordResetTokenController,
+  resetPasswordController,
 };
