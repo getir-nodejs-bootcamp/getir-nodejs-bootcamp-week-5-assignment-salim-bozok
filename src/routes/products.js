@@ -7,6 +7,7 @@ const {
   getProductsController,
 } = require("../controllers/products");
 const auth = require("../middlewares/auth");
+const upload = require("../middlewares/upload");
 const validate = require("../middlewares/validate");
 const {
   createProductSchema,
@@ -29,6 +30,11 @@ router.patch(
   validate(updateProductSchema, "body"),
   updateProductController
 );
-router.patch("/:id/image", auth, updateProductImageController);
+router.patch(
+  "/:id/image",
+  auth,
+  upload.single("image"),
+  updateProductImageController
+);
 
 module.exports = router;

@@ -11,9 +11,7 @@ async function createProduct(data) {
 async function getAllProducts(data) {
   return await Product.find()
     .limit(data.limit)
-    .skip(data.skip)
-    .sort(data.sort)
-    .order(data.order);
+    .skip((data.page - 1) * data.limit);
 }
 
 async function getProduct(id) {

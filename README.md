@@ -155,6 +155,40 @@ localhost:4000/api/v1/users/me
 
 ![Reset password user interface](./reset-password-ui.png)
 
+#### Create Product
+
+**Method**: POST
+
+```
+localhost:4000/api/v1/products
+```
+
+**Header:**
+
+```
+"Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MWJkY2Y0OGM5MzVkNzEyYWI1ZTBhMWUiLCJpYXQiOjE2Mzk4NDkwOTgsImV4cCI6MTY0MDQ1Mzg5OH0.wLXQN6UjV2Qu1raLxP9t2dtYaA87064S-b385LXl5WI"
+```
+
+**Body:**
+
+```
+{
+    "name": "Mekbuk",
+    "description": "lorem ipsum dolor sit amet",
+    "price": 18000
+}
+```
+
+#### Upload Product Image
+
+**Method**: POST
+
+```
+localhost:4000/api/v1/products/[:id]/image
+```
+
+![Postman example for upload product image](./upload-product-image.png)
+
 <br />
 
 **Contact**: Salim Bozok ([GitHub](https://github.com/nebisin) - [Linkedin](https://www.linkedin.com/in/salimbozok/) - <salimbozok@outlook.com>)

@@ -15,8 +15,8 @@ const updateProductSchema = Joi.object().keys({
 const getProductsSchema = Joi.object().keys({
   page: Joi.number().min(1).default(1),
   limit: Joi.number().min(1).max(100).default(10),
-  sort: Joi.string().valid(["name", "price", "updatedAt"]).default("updatedAt"),
-  order: Joi.string().valid(["asc", "desc"]).default("asc"),
+  sort: Joi.string().valid("name", "price", "updatedAt").default("updatedAt"),
+  order: Joi.string().valid("asc", "desc").default("asc"),
 });
 
 module.exports = {
