@@ -126,7 +126,7 @@ localhost:4000/api/v1/users/login
 **Method**: GET
 
 ```
-localhost:4000/api/v1/users/password-reset
+localhost:4000/api/v1/users/me
 ```
 
 **Header:**
@@ -140,7 +140,7 @@ localhost:4000/api/v1/users/password-reset
 **Method**: POST
 
 ```
-localhost:4000/api/v1/users/me
+localhost:4000/api/v1/users/password-reset
 ```
 
 **Body:**
